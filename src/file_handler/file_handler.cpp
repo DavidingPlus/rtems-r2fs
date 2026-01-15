@@ -1,5 +1,7 @@
 #include "file_handler.h"
 
+#include <rtems/libio.h>
+
 
 int r2fs_file_open(rtems_libio_t *iop, const char *pathname, int oflag, mode_t mode)
 {
@@ -46,8 +48,9 @@ const rtems_filesystem_file_handlers_r r2fs_file_handlers = {
     .fsync_h = r2fs_file_fdatasync,
     .fdatasync_h = r2fs_file_fdatasync,
     .fcntl_h = rtems_filesystem_default_fcntl,
-    .kqfilter_h = rtems_filesystem_default_kqfilter,
-    .mmap_h = rtems_filesystem_default_mmap,
     .poll_h = rtems_filesystem_default_poll,
+    .kqfilter_h = rtems_filesystem_default_kqfilter,
     .readv_h = rtems_filesystem_default_readv,
-    .writev_h = rtems_filesystem_default_writev};
+    .writev_h = rtems_filesystem_default_writev,
+    .mmap_h = rtems_filesystem_default_mmap,
+};

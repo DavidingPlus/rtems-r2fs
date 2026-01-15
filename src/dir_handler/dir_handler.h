@@ -1,6 +1,10 @@
 #ifndef _DIR_HANDLER_H_
 #define _DIR_HANDLER_H_
 
+#include <rtems/fs.h>
+
+#include <utf8proc/utf8proc.h>
+
 
 namespace r2fs
 {
