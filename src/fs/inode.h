@@ -1,6 +1,8 @@
 #ifndef _INODE_H_
 #define _INODE_H_
 
+#include <sys/endian.h>
+
 
 /* Return the file system structure given a path location.
  *

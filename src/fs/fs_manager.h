@@ -4,7 +4,7 @@
 #include <memory>
 #include <mutex>
 
-#include "cache/dentry_cache.hh"
+#include "cache/dentry_cache.h"
 #include "utils/r2fs_multithread.h"
 
 
