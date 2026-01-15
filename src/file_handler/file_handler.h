@@ -5,6 +5,8 @@
 
 #include <utf8proc/utf8proc.h>
 
+#include <sys/stat.h>
+
 
 namespace r2fs
 {
