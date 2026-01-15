@@ -1,4 +1,4 @@
-# rtems-r2fs
+# r2fs
 
 Rtems 下的一个简单的由 f2fs 迁移而来的文件系统。
 
@@ -21,6 +21,6 @@ Rtems 下的一个简单的由 f2fs 迁移而来的文件系统。
 ```bash
 export QEMU_AUDIO_DRV="none"
 
-qemu-system-arm -no-reboot -nographic -M realview-pbx-a9 -m 256M -kernel ./build/arm-rtems6-realview_pbx_a9_qemu/r2fs.exe
+qemu-system-arm -no-reboot -nographic -M realview-pbx-a9 -m 256M -kernel ./build/arm-rtems6-realview_pbx_a9_qemu/main.exe
 ```
 
