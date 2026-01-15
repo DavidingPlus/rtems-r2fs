@@ -29,13 +29,13 @@ def configure(conf):
 def build(bld):
     rtems.build(bld)
 
-    all_sources = bld.path.ant_glob('src/**/*.c', excl='**/test_*.c **/*_test.c')
+    all_sources = bld.path.ant_glob('src/**/*.cpp', excl='**/test_*.cpp **/*_test.cpp')
 
     include_paths = [
         bld.path.find_dir('src').abspath()
     ]
 
-    bld(features = 'c cprogram',
+    bld(features = 'cxx cxxprogram',
         target = 'main.exe',
         cflags = '-g',
         includes = include_paths,
