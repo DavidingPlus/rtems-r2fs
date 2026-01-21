@@ -40,9 +40,9 @@ public:
     std::unique_ptr<entry_t> remove(const key_t &key)
     {
         assert(1 == index.count(key));
-        std::unique_ptr<entry_t> ret = std::move(index[key]);
+        std::unique_ptr<entry_t> res = std::move(index[key]);
         index.erase(key);
-        return ret;
+        return res;
     }
 
     entry_t *get(const key_t &key) { return 0 == index.count(key) ? nullptr : index[key].get(); }
@@ -170,6 +170,114 @@ private:
      * 同一时刻，根据缓存项是否被 pin 住，该 iterator 指向的元素位于 lru_list(unpin) 或 pinned_list(pin) 二者之一。
      */
     std::unordered_map<key_t, std::pair<bool, list_iterator_t>> key_states;
+};
+
+
+/**
+ * @class GenericCacheManager
+ * @brief 通用缓存管理器。
+ * @details 要求：
+ *
+ * 缓存项类型为entry_t，缓存项的键的类型为key_t
+ *
+ * 缓存索引管理器的类型为 index_t<key_t, entry_t>，能够调用：
+ * void add(const key_t &key, std::unique_ptr<entry_t> &p_entry);
+ * std::unique_ptr<entry_t> remove(const key_t &key);
+ * entry_t *get(const key_t &key);
+ * iterator_t begin();
+ * iterator_t end();
+ * iterator_t erase(const iterator_t pos);
+ * 其中，iterator_t能够进行自增、自减操作
+ *
+ * 缓存置换器的类型为 replacer_t<key_t>，能够调用：
+ * void add(const key_t &key);
+ * size_t get_num_can_replace();
+ * key_t pop_replaced();
+ * void pin(const key_t &key);
+ * void unpin(const key_t &key);
+ * void access(const key_t &key);
+ * void remove(const key_t &key);
+ *
+ **/
+template <typename key_t, typename entry_t,
+          template <typename, typename> class index_t = CacheIndexManager,
+          template <typename> class replacer_t = CacheLruReplacer>
+class GenericCacheManager
+{
+
+public:
+
+    using iterator_t = typename index_t<key_t, entry_t>::iterator_t;
+
+
+    // 增加缓存项 p_entry，并把该缓存项的所有权交给 cache_manager。
+    void add(const key_t &key, std::unique_ptr<entry_t> &p_entry)
+    {
+        index.add(key, p_entry);
+        replacer.add(key);
+    }
+
+    void add(const key_t &key, std::unique_ptr<entry_t> &&p_entry)
+    {
+        index.add(key, std::move(p_entry));
+        replacer.add(key);
+    }
+
+    // 获取键为 key 的缓存项，若不存在返回 nullptr。若 is_access 为 true，则视为对 key 的一次访问。调用者不拥有该缓存项指针的所有权，不能释放。
+    entry_t *get(const key_t &key, bool is_access = true)
+    {
+        entry_t *res = index.get(key);
+        if (res != nullptr && is_access)
+            replacer.access(key);
+        return res;
+    }
+
+    // pin 住缓存项，标识其不能被置换。
+    void pin(const key_t &key) { replacer.pin(key); }
+
+    // unpin 缓存项，使其可以被置换。
+    void unpin(const key_t &key) { replacer.unpin(key); }
+
+    // 置换一个缓存项，将其从 cache_manager 中移除并获取其所有权。若没有可置换的缓存项，返回 nullptr。
+    std::unique_ptr<entry_t> replace_one()
+    {
+        if (replacer.get_num_can_replace() == 0)
+            return nullptr;
+        key_t key = replacer.pop_replaced();
+        return index.remove(key);
+    }
+
+    // 手动移除缓存项，无论是否被 pin 住 。
+    void remove(const key_t &key)
+    {
+        replacer.remove(key);
+        index.remove(key);
+    }
+
+    iterator_t begin() { return index.begin(); }
+
+    iterator_t end() { return index.end(); }
+
+    iterator_t erase(const iterator_t pos)
+    {
+        const key_t &key = pos->first;
+        replacer.remove(key);
+        iterator_t res = index.erase(pos);
+        return res;
+    }
+
+
+private:
+
+    /**
+     * @brief 缓存索引。
+     */
+    index_t<key_t, entry_t> index;
+
+    /**
+     * @brief 替换器。
+     */
+    replacer_t<key_t> replacer;
 };
 
 
