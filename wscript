@@ -29,10 +29,12 @@ def configure(conf):
 def build(bld):
     rtems.build(bld)
 
-    all_sources = bld.path.ant_glob('src/**/*.c', excl='**/test_*.c **/*_test.c')
+    all_sources = bld.path.ant_glob('src/**/*.c', excl='**/test_*.c **/*_test.c') + bld.path.ant_glob('test/**/*.c') + bld.path.ant_glob('third_party/**/*.c')
 
     include_paths = [
-        bld.path.find_dir('src').abspath()
+        bld.path.find_dir('src').abspath(),
+        bld.path.find_dir('test').abspath(),
+        bld.path.find_dir('third_party').abspath()
     ]
 
     bld(features = 'c cprogram',
