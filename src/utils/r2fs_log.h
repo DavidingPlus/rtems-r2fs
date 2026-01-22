@@ -1,5 +1,5 @@
-#ifndef _LOG_H_
-#define _LOG_H_
+#ifndef _R2FS_LOG_H_
+#define _R2FS_LOG_H_
 
 
 typedef enum R2fsLogLevel

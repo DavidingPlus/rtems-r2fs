@@ -1,12 +1,9 @@
-#ifndef _UNIT_TEST_H_
-#define _UNIT_TEST_H_
+#ifndef _r2fs_test_H_
+#define _r2fs_test_H_
 
 #include <stdlib.h>
 
 #include "unity/unity.h"
-
-
-#define MAX_TESTS 1000
 
 
 // unity 要求的必须用户提供的接口，留空即可。
@@ -33,6 +30,9 @@ void tearDown(void);
 当然，问题在于有测试函数数量的上限，这个其实问题不大。
 ========================================================================
 */
+#define MAX_TESTS 1000
+
+
 typedef void (*testFunc)(void);
 
 struct TestEntry

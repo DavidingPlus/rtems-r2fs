@@ -3,7 +3,7 @@
 
 #include "uthash/uthash.h"
 
-#include "unit_test.h"
+#include "r2fs_test.h"
 
 
 typedef struct example_user_t

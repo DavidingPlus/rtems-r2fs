@@ -1,4 +1,4 @@
-#include "unit_test.h"
+#include "r2fs_test.h"
 
 
 struct TestEntry testArray[MAX_TESTS] = {};
