@@ -6,6 +6,9 @@
 #include "unity/unity.h"
 
 
+#define MAX_TESTS 1000
+
+
 // unity 要求的必须用户提供的接口，留空即可。
 void setUp(void);
 
@@ -18,25 +21,27 @@ struct TestEntry
 {
     const char *name;
     testFunc func;
-    struct TestEntry *next;
 };
 
-static struct TestEntry *testListHead = NULL;
+extern struct TestEntry testArray[MAX_TESTS];
+extern int testCount;
 
 
-#define R2FS_TEST(test_name)                                            \
-    void test_name(void);                                               \
-    static void __attribute__((constructor)) register_##test_name(void) \
-    {                                                                   \
-        struct TestEntry *node = malloc(sizeof(struct TestEntry));      \
-        if (node)                                                       \
-        {                                                               \
-            node->name = #test_name;                                    \
-            node->func = test_name;                                     \
-            node->next = testListHead;                                  \
-            testListHead = node;                                        \
-        }                                                               \
-    }                                                                   \
+#define R2FS_TEST(test_name)                                                  \
+    void test_name(void);                                                     \
+    static void __attribute__((unused)) register_##test_name(void)            \
+    {                                                                         \
+        if (testCount < MAX_TESTS)                                            \
+        {                                                                     \
+            testArray[testCount].name = #test_name;                           \
+            testArray[testCount].func = test_name;                            \
+            testCount++;                                                      \
+        }                                                                     \
+    }                                                                         \
+    static void __attribute__((constructor)) _call_register_##test_name(void) \
+    {                                                                         \
+        register_##test_name();                                               \
+    }                                                                         \
     void test_name(void)
 
 

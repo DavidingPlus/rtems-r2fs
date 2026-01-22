@@ -1,5 +1,11 @@
 #include "unit_test.h"
 
+
+struct TestEntry testArray[MAX_TESTS] = {};
+
+int testCount = 0;
+
+
 void setUp(void) {}
 
 void tearDown(void) {}
@@ -8,13 +14,11 @@ void runAllTests(void)
 {
     UNITY_BEGIN();
 
-    struct TestEntry *node = testListHead;
-    while (node)
+    for (int i = 0; i < testCount; i++)
     {
-        printf("[ RUN      ] %s\n", node->name);
-        RUN_TEST(node->func);
-        printf("[       OK ] %s\n", node->name);
-        node = node->next;
+        printf("[ RUN      ] %s\n", testArray[i].name);
+        RUN_TEST(testArray[i].func);
+        printf("[       OK ] %s\n", testArray[i].name);
     }
 
     UNITY_END();
