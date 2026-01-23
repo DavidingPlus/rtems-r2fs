@@ -1,7 +1,8 @@
 # R2FS Makefile
 # 
 # 使用方法：
-#   make configure  - 配置项目
+#   make configure  - 配置项目，默认不带 unit test
+#   make configure-with-unit-test - 配置项目并启动 unit test
 #   make build      - 构建项目
 #   make run        - 运行项目
 #   make clean      - 清理构建文件
@@ -9,7 +10,6 @@
 # 默认配置
 RTEMS_ROOT ?= $(HOME)/quick-start/rtems/6
 BSP ?= arm/realview_pbx_a9_qemu
-ENABLE_UNIT_TEST ?= 1
 
 # 项目配置
 PROJECT_NAME = main
@@ -18,21 +18,22 @@ TARGET = $(PROJECT_NAME).exe
 # 默认目标
 all: build
 
-# 配置项目
+# 配置项目，默认不带 unit test
 configure:
 	@echo "Configuring R2FS FileSystem..."
-	@if [ "$(ENABLE_UNIT_TEST)" = "1" ]; then \
-		echo "Unit Test Enabled"; \
-		./waf configure \
-			--rtems=$(RTEMS_ROOT) \
-			--rtems-bsp=$(BSP) \
-			--enable-unit-test; \
-	else \
-		echo "Unit Test Disabled"; \
-		./waf configure \
-			--rtems=$(RTEMS_ROOT) \
-			--rtems-bsp=$(BSP); \
-	fi
+	@echo "Unit Test Disabled"; \
+	./waf configure \
+		--rtems=$(RTEMS_ROOT) \
+		--rtems-bsp=$(BSP); \
+
+# 配置项目并启动 unit test
+configure-with-unit-test:
+	@echo "Configuring R2FS FileSystem..."
+	@echo "Unit Test Enabled"; \
+	./waf configure \
+		--rtems=$(RTEMS_ROOT) \
+		--rtems-bsp=$(BSP) \
+		--enable-unit-test; \
 
 # 构建项目
 build:
@@ -52,4 +53,4 @@ clean:
 	./waf clean
 	rm -rf build/
 
-.PHONY: all configure build run clean
+.PHONY: all configure configure-with-unit-test build run clean
