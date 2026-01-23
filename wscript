@@ -23,21 +23,45 @@ def bsp_configure(conf, arch_bsp):
 def options(opt):
     rtems.options(opt)
 
+    opt.add_option(
+        '--enable-unit-test',
+        action='store_true',
+        default=False,
+        help='Enable Unit Tests'
+    )
+
 def configure(conf):
     rtems.configure(conf, bsp_configure=bsp_configure)
+
+    if conf.options.enable_unit_test:
+        conf.define('ENABLE_UNIT_TEST', True)
+        conf.msg('Checking for Unit Test', 'Enabled')
+    else:
+        conf.msg('Checking for Unit Test', 'Disabled')
+
+    conf.write_config_header('r2fs_config.h')
 
 def build(bld):
     rtems.build(bld)
 
-    all_sources = bld.path.ant_glob('src/**/*.cpp', excl='**/test_*.cpp **/*_test.cpp')
+    all_sources = bld.path.ant_glob('src/**/*.c', excl='**/test_*.c **/*_test.c') + bld.path.ant_glob('third_party/**/*.c')
+
+    # 这个做法太丑陋了，但是目前没找到合适的解法。conf 级别的配置和变量无法同步到 build 级别，我不知道为什么。
+    with open('build/r2fs_config.h') as f:
+        text = f.read()
+    if '#define ENABLE_UNIT_TEST 1' in text:
+        all_sources += bld.path.ant_glob('test/**/*.c')
 
     include_paths = [
-        bld.path.find_dir('src').abspath()
+        bld.path.find_dir('build').abspath(),
+        bld.path.find_dir('src').abspath(),
+        bld.path.find_dir('test').abspath(),
+        bld.path.find_dir('third_party').abspath()
     ]
 
-    bld(features = 'cxx cxxprogram',
+    bld(features = 'c cprogram',
         target = 'main.exe',
         cflags = '-g',
         includes = include_paths,
-        source = ['configure.c'] + all_sources
+        source = all_sources
     )

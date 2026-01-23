@@ -8,16 +8,13 @@
 #include <sys/stat.h>
 
 
-namespace r2fs
-{
-    int r2fs_dir_open(rtems_libio_t *iop, const char *path, int oflag, mode_t mode);
+int r2fsDirOpen(rtems_libio_t *iop, const char *path, int oflag, mode_t mode);
 
-    int r2fs_dir_close(rtems_libio_t *iop);
+int r2fsDirClose(rtems_libio_t *iop);
 
-    ssize_t r2fs_dir_read(rtems_libio_t *iop, void *buffer, size_t count);
+ssize_t r2fsDirRead(rtems_libio_t *iop, void *buffer, size_t count);
 
-    int r2fs_dir_fstat(const rtems_filesystem_location_info_t *pathloc, struct stat *buf);
-}
+int r2fsDirFstat(const rtems_filesystem_location_info_t *pathloc, struct stat *buf);
 
 
 #endif
