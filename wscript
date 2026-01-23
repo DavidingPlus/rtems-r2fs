@@ -63,5 +63,5 @@ def build(bld):
         target = 'main.exe',
         cflags = '-g',
         includes = include_paths,
-        source = ['configure.c'] + all_sources
+        source = all_sources
     )
