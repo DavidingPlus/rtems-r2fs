@@ -9,6 +9,7 @@
 # 默认配置
 RTEMS_ROOT ?= $(HOME)/quick-start/rtems/6
 BSP ?= arm/realview_pbx_a9_qemu
+ENABLE_UNIT_TEST ?= 1
 
 # 项目配置
 PROJECT_NAME = main
@@ -20,7 +21,18 @@ all: build
 # 配置项目
 configure:
 	@echo "Configuring R2FS FileSystem..."
-	./waf configure --rtems=$(RTEMS_ROOT) --rtems-bsp=$(BSP)
+	@if [ "$(ENABLE_UNIT_TEST)" = "1" ]; then \
+		echo "Unit Test Enabled"; \
+		./waf configure \
+			--rtems=$(RTEMS_ROOT) \
+			--rtems-bsp=$(BSP) \
+			--enable-unit-test; \
+	else \
+		echo "Unit Test Disabled"; \
+		./waf configure \
+			--rtems=$(RTEMS_ROOT) \
+			--rtems-bsp=$(BSP); \
+	fi
 
 # 构建项目
 build:

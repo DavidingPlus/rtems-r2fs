@@ -1,5 +1,5 @@
-#ifndef _r2fs_test_H_
-#define _r2fs_test_H_
+#ifndef _R2FS_TEST_H_
+#define _R2FS_TEST_H_
 
 #include "unity/unity.h"
 
