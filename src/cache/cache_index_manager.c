@@ -18,10 +18,9 @@ void cacheIndexManagerDestroy(CacheIndexManager *pCim)
     pCim->index = NULL;
 }
 
-
 void cacheIndexManagerAdd(CacheIndexManager *pCim, void *key, void *value)
 {
-    // assert(cacheIndexManagerGet(pCim, key) == NULL); // key 不能重复
+    assert(cacheIndexManagerGet(pCim, key) == NULL); // key 不能重复
 
     CacheEntry *entry = (CacheEntry *)malloc(sizeof(CacheEntry));
     entry->key = key;
@@ -29,14 +28,12 @@ void cacheIndexManagerAdd(CacheIndexManager *pCim, void *key, void *value)
     HASH_ADD_PTR(pCim->index, key, entry); // 按指针比较 key
 }
 
-
 void *cacheIndexManagerGet(CacheIndexManager *pCim, void *key)
 {
     CacheEntry *entry;
     HASH_FIND_PTR(pCim->index, &key, entry);
     return entry ? entry->value : NULL;
 }
-
 
 void *cacheIndexManagerRemove(CacheIndexManager *pCim, void *key)
 {
@@ -49,7 +46,6 @@ void *cacheIndexManagerRemove(CacheIndexManager *pCim, void *key)
     free(entry);
     return value;
 }
-
 
 void cacheIndexManagerErase(CacheIndexManager *pCim, CacheEntry *pCacheEntry)
 {

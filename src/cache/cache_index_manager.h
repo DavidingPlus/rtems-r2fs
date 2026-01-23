@@ -56,12 +56,5 @@ void *cacheIndexManagerRemove(CacheIndexManager *pCim, void *key);
  */
 void cacheIndexManagerErase(CacheIndexManager *pCim, CacheEntry *pCacheEntry);
 
-/**
- * @brief 遍历缓存的宏。
- */
-#define CACHE_INDEX_MANAGER_FOREACH(cache, entry_var) \
-    CacheEntry *entry_var, *tmp_##entry_var;          \
-    HASH_ITER(hh, (cache)->index, entry_var, tmp_##entry_var)
-
 
 #endif

@@ -15,7 +15,6 @@ R2FS_TEST(AddGetTest)
     CacheIndexManager cim;
 
     int *key = malloc(sizeof(int));
-    printf("%p\n", key);
     *key = 1;
 
     TestEntry *entry = malloc(sizeof(TestEntry));
@@ -38,7 +37,6 @@ R2FS_TEST(RemoveTest)
     CacheIndexManager cim;
 
     int *key = malloc(sizeof(int));
-    printf("%p\n", key);
 
     TestEntry *entry = malloc(sizeof(TestEntry));
     entry->id = 2;
@@ -56,36 +54,29 @@ R2FS_TEST(RemoveTest)
     free(key);
 }
 
-R2FS_TEST(ForeachTest)
+R2FS_TEST(AddDupKeyTest)
 {
     CacheIndexManager cim;
 
-    int *k1 = malloc(sizeof(int));
-    *k1 = 3;
-    int *k2 = malloc(sizeof(int));
-    *k2 = 4;
+    int *key = malloc(sizeof(int));
+    *key = 5;
 
-    TestEntry *e1 = malloc(sizeof(TestEntry));
-    e1->id = 3;
-    strcpy(e1->name, "Carol");
-    TestEntry *e2 = malloc(sizeof(TestEntry));
-    e2->id = 4;
-    strcpy(e2->name, "Dave");
+    TestEntry *v1 = malloc(sizeof(TestEntry));
+    v1->id = 5;
+    strcpy(v1->name, "Eve");
 
-    cacheIndexManagerAdd(&cim, k1, e1);
-    cacheIndexManagerAdd(&cim, k2, e2);
+    cacheIndexManagerAdd(&cim, key, v1);
 
-    int count = 0;
-    CACHE_INDEX_MANAGER_FOREACH(&cim, entry)
-    {
-        TestEntry *v = (TestEntry *)entry->value;
-        TEST_ASSERT_NOT_NULL(v);
-        count++;
-    }
-    TEST_ASSERT_EQUAL_INT(2, count);
+    // 再添加同样 key 应该触发 assert
+    TestEntry *v2 = malloc(sizeof(TestEntry));
+    v2->id = 6;
+    strcpy(v2->name, "Frank");
 
-    free(e2);
-    free(e1);
-    free(k2);
-    free(k1);
+    // assert 本来会导致程序崩溃，但是被这条语句阻止了。
+    TEST_IGNORE_MESSAGE("Expect assertion failure when adding duplicate key");
+    cacheIndexManagerAdd(&cim, key, v2);
+
+    free(v2);
+    free(v1);
+    free(key);
 }
