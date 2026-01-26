@@ -10,7 +10,7 @@ typedef struct
 } TestEntry;
 
 
-R2FS_TEST(AddGetTest)
+R2FS_TEST(CIMAddGetTest)
 {
     CacheIndexManager cim;
 
@@ -32,7 +32,7 @@ R2FS_TEST(AddGetTest)
     free(key);
 }
 
-R2FS_TEST(RemoveTest)
+R2FS_TEST(CIMRemoveTest)
 {
     CacheIndexManager cim;
 
@@ -54,7 +54,7 @@ R2FS_TEST(RemoveTest)
     free(key);
 }
 
-R2FS_TEST(AddDupKeyTest)
+R2FS_TEST(CIMAddDupKeyTest)
 {
     CacheIndexManager cim;
 

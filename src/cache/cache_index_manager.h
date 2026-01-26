@@ -1,5 +1,5 @@
-#ifndef _CACHEIndexManagerINDEX_MANAGER_H_
-#define _CACHEIndexManagerINDEX_MANAGER_H_
+#ifndef _CACHE_INDEX_MANAGER_H_
+#define _CACHE_INDEX_MANAGER_H_
 
 #include <stdlib.h>
 #include <assert.h>
