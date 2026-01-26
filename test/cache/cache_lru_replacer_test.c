@@ -3,7 +3,7 @@
 #include "cache/cache_lru_replacer.h"
 
 
-R2FS_TEST(CLRInitEmptyTest)
+R2FS_TEST(CLRInitTest)
 {
     CacheLruReplacer lru;
 
