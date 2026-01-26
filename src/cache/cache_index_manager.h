@@ -59,32 +59,32 @@ typedef struct CacheIndexManager
 /**
  * @brief 初始化缓存索引。
  */
-void cacheIndexManagerInit(CacheIndexManager *pCim);
+void cacheIndexManagerInit(CacheIndexManager *cim);
 
 /**
  * @brief 销毁缓存索引，释放所有 value 内存。
  */
-void cacheIndexManagerDestroy(CacheIndexManager *pCim);
+void cacheIndexManagerDestroy(CacheIndexManager *cim);
 
 /**
  * @brief 添加缓存项。
  */
-void cacheIndexManagerAdd(CacheIndexManager *pCim, void *key, void *value);
+void cacheIndexManagerAdd(CacheIndexManager *cim, void *key, void *value);
 
 /**
  * @brief 获取缓存项。
  */
-void *cacheIndexManagerGet(CacheIndexManager *pCim, void *key);
+void *cacheIndexManagerGet(CacheIndexManager *cim, void *key);
 
 /**
  * @brief 移除缓存项，返回 value，由调用者决定是否释放。
  */
-void *cacheIndexManagerRemove(CacheIndexManager *pCim, void *key);
+void *cacheIndexManagerRemove(CacheIndexManager *cim, void *key);
 
 /**
  * @brief 删除指定条目（迭代器风格）。
  */
-void cacheIndexManagerErase(CacheIndexManager *pCim, CacheEntry *pCacheEntry);
+void cacheIndexManagerErase(CacheIndexManager *cim, CacheEntry *cacheEntry);
 
 
 #endif
