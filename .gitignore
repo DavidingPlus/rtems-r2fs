@@ -4,4 +4,4 @@ build/
 .waf*
 .lock*
 *.img
-./Makefile
+/Makefile
