@@ -8,8 +8,8 @@
 #   make clean      - 清理构建文件
 
 # 默认配置
-RTEMS_ROOT ?= $(HOME)/quick-start/rtems/6
-BSP ?= arm/realview_pbx_a9_qemu
+RTEMS_ROOT ?= # 填入你自己的 RTEMS 安装路径，例如：$(HOME)/quick-start/rtems/6
+BSP ?= # 填入你自己的 BSP，例如：arm/realview_pbx_a9_qemu
 
 # 项目配置
 PROJECT_NAME = main
