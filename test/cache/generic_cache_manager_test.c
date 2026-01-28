@@ -5,10 +5,10 @@
 
 typedef struct
 {
-    uint32_t value;
+    int value;
 } GcmTestEntry;
 
-static GcmTestEntry *newTestEntry(uint32_t v)
+static GcmTestEntry *newTestEntry(int v)
 {
     GcmTestEntry *e = (GcmTestEntry *)malloc(sizeof(GcmTestEntry));
     e->value = v;
@@ -24,8 +24,10 @@ R2FS_TEST(GCMInitTest)
 
     genericCacheManagerInit(&gcm);
 
+
     // 空 cache，无法 replace。
     TEST_ASSERT_NULL(genericCacheManagerReplaceOne(&gcm));
+
 
     genericCacheManagerDestroy(&gcm);
 }
@@ -37,12 +39,14 @@ R2FS_TEST(GCMAddGetTest)
 
     genericCacheManagerInit(&gcm);
 
+
     GcmTestEntry *e1 = newTestEntry(100);
     genericCacheManagerAdd(&gcm, k1, e1);
 
     GcmTestEntry *res = (GcmTestEntry *)genericCacheManagerGet(&gcm, k1, true);
     TEST_ASSERT_NOT_NULL(res);
     TEST_ASSERT_EQUAL_INT(res->value, 100);
+
 
     genericCacheManagerDestroy(&gcm);
 }
@@ -53,6 +57,7 @@ R2FS_TEST(GCMReplaceOrderTest1)
     uint32_t k1 = 1, k2 = 2, k3 = 3;
 
     genericCacheManagerInit(&gcm);
+
 
     genericCacheManagerAdd(&gcm, k1, newTestEntry(1));
     genericCacheManagerAdd(&gcm, k2, newTestEntry(2));
@@ -72,6 +77,7 @@ R2FS_TEST(GCMReplaceOrderTest1)
     TEST_ASSERT_EQUAL_INT(e->value, 3);
     free(e);
 
+
     genericCacheManagerDestroy(&gcm);
 }
 
@@ -81,6 +87,7 @@ R2FS_TEST(GCMAccessRefreshTest)
     uint32_t k1 = 1, k2 = 2, k3 = 3;
 
     genericCacheManagerInit(&gcm);
+
 
     genericCacheManagerAdd(&gcm, k1, newTestEntry(1));
     genericCacheManagerAdd(&gcm, k2, newTestEntry(2));
@@ -103,6 +110,7 @@ R2FS_TEST(GCMAccessRefreshTest)
     TEST_ASSERT_EQUAL_INT(e->value, 1);
     free(e);
 
+
     genericCacheManagerDestroy(&gcm);
 }
 
@@ -113,11 +121,12 @@ R2FS_TEST(GCMNoAccessRefreshTest)
 
     genericCacheManagerInit(&gcm);
 
+
     genericCacheManagerAdd(&gcm, k1, newTestEntry(1));
     genericCacheManagerAdd(&gcm, k2, newTestEntry(2));
     genericCacheManagerAdd(&gcm, k3, newTestEntry(3));
 
-    // 只是窥视，不算访问
+    // 只是窥视，不算访问。
     genericCacheManagerGet(&gcm, k1, false);
 
     GcmTestEntry *e;
@@ -134,6 +143,7 @@ R2FS_TEST(GCMNoAccessRefreshTest)
     TEST_ASSERT_EQUAL_INT(e->value, 3);
     free(e);
 
+
     genericCacheManagerDestroy(&gcm);
 }
 
@@ -143,6 +153,7 @@ R2FS_TEST(GCMRemoveTest)
     uint32_t k1 = 1, k2 = 2, k3 = 3;
 
     genericCacheManagerInit(&gcm);
+
 
     genericCacheManagerAdd(&gcm, k1, newTestEntry(1));
     genericCacheManagerAdd(&gcm, k2, newTestEntry(2));
@@ -159,6 +170,7 @@ R2FS_TEST(GCMRemoveTest)
     e = (GcmTestEntry *)genericCacheManagerReplaceOne(&gcm);
     TEST_ASSERT_EQUAL_INT(e->value, 3);
     free(e);
+
 
     genericCacheManagerDestroy(&gcm);
 }
