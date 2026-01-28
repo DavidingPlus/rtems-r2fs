@@ -15,7 +15,7 @@ void runAllTests(void)
     UNITY_BEGIN();
 
     int failedCases = 0;
-    for (int i = 0; i < testCount; i++)
+    for (int i = 0; i < testCount; ++i)
     {
         printf(R2FS_COLOR_GREEN "[ RUN      ] %s" R2FS_COLOR_RESET "\n", testArray[i].name);
 

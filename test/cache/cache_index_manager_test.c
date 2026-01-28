@@ -25,18 +25,16 @@ R2FS_TEST(CIMAddGetTest)
 
     cacheIndexManagerInit(&cim);
 
-    // int *key = (int *)malloc(sizeof(int));
-    // *key = 1;
-    int key = 1;
+    uint32_t key = 1;
 
     // 注意：entry 需要使用 malloc 分配堆内存，确保 CacheIndexManager 拥有它的所有权。不能用栈变量，否则 cacheIndexManagerDestroy 会 free 栈内存导致崩溃。
     TestEntry *entry = (TestEntry *)malloc(sizeof(TestEntry));
     entry->id = 1;
     strcpy(entry->name, "Alice");
 
-    cacheIndexManagerAdd(&cim, &key, entry);
+    cacheIndexManagerAdd(&cim, key, entry);
 
-    TestEntry *e = (TestEntry *)cacheIndexManagerGet(&cim, &key);
+    TestEntry *e = (TestEntry *)cacheIndexManagerGet(&cim, key);
     TEST_ASSERT_NOT_NULL(e);
     TEST_ASSERT_EQUAL_INT(1, e->id);
     TEST_ASSERT_EQUAL_STRING("Alice", e->name);
@@ -55,8 +53,7 @@ R2FS_TEST(CIMRemoveTest)
     cacheIndexManagerInit(&cim);
 
 
-    int *key = (int *)malloc(sizeof(int));
-    *key = 2;
+    uint32_t key = 2;
 
     TestEntry *entry = (TestEntry *)malloc(sizeof(TestEntry));
     entry->id = 2;
@@ -70,8 +67,6 @@ R2FS_TEST(CIMRemoveTest)
     TEST_ASSERT_EQUAL_INT(2, removed->id);
     TEST_ASSERT_EQUAL_STRING("Bob", removed->name);
 
-    free(key);
-
 
     cacheIndexManagerDestroy(&cim);
 }
@@ -83,8 +78,7 @@ R2FS_TEST(CIMAddDupKeyTest)
     cacheIndexManagerInit(&cim);
 
 
-    int *key = (int *)malloc(sizeof(int));
-    *key = 3;
+    uint32_t key = 3;
 
     TestEntry *v1 = (TestEntry *)malloc(sizeof(TestEntry));
     v1->id = 3;
@@ -100,8 +94,6 @@ R2FS_TEST(CIMAddDupKeyTest)
     // assert 本来会导致程序崩溃，但是被这条语句阻止了。
     TEST_IGNORE_MESSAGE("Expect assertion failure when adding duplicate key");
     cacheIndexManagerAdd(&cim, key, v2);
-
-    free(key);
 
 
     cacheIndexManagerDestroy(&cim);

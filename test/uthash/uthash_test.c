@@ -20,7 +20,7 @@ R2FS_TEST(UthashTest)
     example_user_t *user, *users = NULL;
 
     /* create elements */
-    for (i = 0; i < 10; i++)
+    for (i = 0; i < 10; ++i)
     {
         user = (example_user_t *)malloc(sizeof(example_user_t));
         if (user == NULL)

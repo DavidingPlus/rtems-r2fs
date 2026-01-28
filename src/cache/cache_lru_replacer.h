@@ -2,7 +2,6 @@
 #define _CACHE_LRU_REPLACER_H_
 
 #include <stddef.h>
-#include <assert.h>
 
 #include "uthash/uthash.h"
 
@@ -12,7 +11,7 @@
  */
 typedef struct LruNode
 {
-    void *key;
+    uint32_t key;
     struct LruNode *prev;
     struct LruNode *next;
 } LruNode;
@@ -23,7 +22,7 @@ typedef struct LruNode
  */
 typedef struct LruEntry
 {
-    void *key;     // 按指针比较。
+    uint32_t key;  // 按指针比较。
     LruNode *node; // 指向链表节点。
     UT_hash_handle hh;
 } LruEntry;
@@ -53,12 +52,12 @@ void cacheLruReplacerDestroy(CacheLruReplacer *lru);
 /**
  * @brief 添加 key（默认视为最近访问）。
  */
-void cacheLruReplacerAdd(CacheLruReplacer *lru, void *key);
+void cacheLruReplacerAdd(CacheLruReplacer *lru, uint32_t key);
 
 /**
  * @brief 访问 key（刷新 LRU 顺序）。
  */
-void cacheLruReplacerAccess(CacheLruReplacer *lru, void *key);
+void cacheLruReplacerAccess(CacheLruReplacer *lru, uint32_t key);
 
 /**
  * @brief 是否存在可被置换的 key。
@@ -68,12 +67,12 @@ int cacheLruReplacerCanReplace(CacheLruReplacer *lru);
 /**
  * @brief 弹出一个最久未访问的 key。
  */
-void *cacheLruReplacerPop(CacheLruReplacer *lru);
+uint32_t cacheLruReplacerPop(CacheLruReplacer *lru);
 
 /**
  * @brief 手动移除指定 key。
  */
-void cacheLruReplacerRemove(CacheLruReplacer *lru, void *key);
+void cacheLruReplacerRemove(CacheLruReplacer *lru, uint32_t key);
 
 
 #endif

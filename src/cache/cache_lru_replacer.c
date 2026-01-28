@@ -1,6 +1,7 @@
 #include "cache_lru_replacer.h"
 
 #include <stdlib.h>
+#include <assert.h>
 
 
 static void detachNode(CacheLruReplacer *lru, LruNode *node)
@@ -58,12 +59,12 @@ void cacheLruReplacerDestroy(CacheLruReplacer *lru)
     lru->size = 0;
 }
 
-void cacheLruReplacerAdd(CacheLruReplacer *lru, void *key)
+void cacheLruReplacerAdd(CacheLruReplacer *lru, uint32_t key)
 {
     assert(lru);
 
     LruEntry *entry = NULL;
-    HASH_FIND_PTR(lru->table, &key, entry);
+    HASH_FIND_INT(lru->table, &key, entry);
     assert(entry == NULL);
 
     LruNode *node = (LruNode *)malloc(sizeof(LruNode));
@@ -78,20 +79,19 @@ void cacheLruReplacerAdd(CacheLruReplacer *lru, void *key)
     entry->key = key;
     entry->node = node;
 
-    HASH_ADD_PTR(lru->table, key, entry);
+    HASH_ADD_INT(lru->table, key, entry);
     ++lru->size;
 }
 
-void cacheLruReplacerAccess(CacheLruReplacer *lru, void *key)
+void cacheLruReplacerAccess(CacheLruReplacer *lru, uint32_t key)
 {
     assert(lru);
 
     LruEntry *entry = NULL;
-    HASH_FIND_PTR(lru->table, &key, entry);
+    HASH_FIND_INT(lru->table, &key, entry);
     assert(entry);
 
     LruNode *node = entry->node;
-
     if (node == lru->tail) return;
 
     detachNode(lru, node);
@@ -101,19 +101,21 @@ void cacheLruReplacerAccess(CacheLruReplacer *lru, void *key)
 int cacheLruReplacerCanReplace(CacheLruReplacer *lru)
 {
     assert(lru);
+
+
     return lru->size > 0;
 }
 
-void *cacheLruReplacerPop(CacheLruReplacer *lru)
+uint32_t cacheLruReplacerPop(CacheLruReplacer *lru)
 {
     assert(lru);
     assert(lru->size > 0);
 
     LruNode *node = lru->head;
-    void *key = node->key;
+    uint32_t key = node->key;
 
     LruEntry *entry = NULL;
-    HASH_FIND_PTR(lru->table, &key, entry);
+    HASH_FIND_INT(lru->table, &key, entry);
     assert(entry);
 
     detachNode(lru, node);
@@ -123,15 +125,17 @@ void *cacheLruReplacerPop(CacheLruReplacer *lru)
     free(entry);
 
     --lru->size;
+
+
     return key;
 }
 
-void cacheLruReplacerRemove(CacheLruReplacer *lru, void *key)
+void cacheLruReplacerRemove(CacheLruReplacer *lru, uint32_t key)
 {
     assert(lru);
 
     LruEntry *entry = NULL;
-    HASH_FIND_PTR(lru->table, &key, entry);
+    HASH_FIND_INT(lru->table, &key, entry);
     assert(entry);
 
     LruNode *node = entry->node;
