@@ -15,6 +15,11 @@ BSP ?= # 填入你自己的 BSP，例如：arm/realview_pbx_a9_qemu
 PROJECT_NAME = main
 TARGET = $(PROJECT_NAME).exe
 
+# QEMU 配置
+QEMU ?= # 填入你自己的 qemu 程序，例如：qemu-system-arm
+QEMU_OPTS ?= # 填入你自己的板级、内存、显示等参数，例如：-no-reboot -nographic -M realview-pbx-a9 -m 256M
+QEMU_KERNEL ?= # 填入最终运行的 ELF，例如：./build/arm-rtems6-realview_pbx_a9_qemu/$(TARGET)
+
 # 默认目标
 all: build
 
@@ -44,8 +49,7 @@ build:
 run: build
 	@echo "Running R2FS FileSystem..."
 	@export QEMU_AUDIO_DRV="none" && \
-	qemu-system-arm -no-reboot -nographic -M realview-pbx-a9 -m 256M \
-		-kernel ./build/arm-rtems6-realview_pbx_a9_qemu/$(TARGET)
+	$(QEMU) $(QEMU_OPTS) -kernel $(QEMU_KERNEL)
 
 # 清理构建文件
 clean:
