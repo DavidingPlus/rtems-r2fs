@@ -66,7 +66,7 @@ void natSetLpaOfNid(NatLpaMapping *this, uint32_t nid, uint32_t newLpa)
 
     R2FS_LOG(R2FS_LOG_DEBUG, "set nid(%u)'s lpa to %u.", nid, newLpa);
 
-    // TODO 记录 NAT 修改日志，依赖日志接口。
+    // TODO 记录 NAT 日志，依赖日志接口。
     // journal_container *curJournal = fsManagerGetCurJournal(this->fsManager);
     // NAT_journal_entry natJournal = {.nid = nid, .newValue = natEntries[pos.idx]};
     // journalAppendNatEntry(curJournal, &natJournal);

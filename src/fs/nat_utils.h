@@ -1,7 +1,7 @@
 #ifndef _NAT_UTILS_H_
 #define _NAT_UTILS_H_
 
-#include <sys/endian.h>
+#include "utils/types.h"
 
 
 /**
