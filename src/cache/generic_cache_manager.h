@@ -25,32 +25,32 @@ typedef struct GenericCacheManager
 /**
  * @brief 初始化通用缓存管理器。
  */
-void genericCacheManagerInit(GenericCacheManager *gcm);
+void genericCacheManagerInit(GenericCacheManager *this);
 
 /**
  * @brief 销毁通用缓存管理器。
  */
-void genericCacheManagerDestroy(GenericCacheManager *gcm);
+void genericCacheManagerDestroy(GenericCacheManager *this);
 
 /**
  * @brief 添加缓存项（转移 entry 所有权）。
  */
-void genericCacheManagerAdd(GenericCacheManager *gcm, uint32_t key, void *entry);
+void genericCacheManagerAdd(GenericCacheManager *this, uint32_t key, void *entry);
 
 /**
  * @brief 获取缓存项（不转移所有权）。
  */
-void *genericCacheManagerGet(GenericCacheManager *gcm, uint32_t key, bool isAccess);
+void *genericCacheManagerGet(GenericCacheManager *this, uint32_t key, bool isAccess);
 
 /**
  * @brief 置换一个缓存项（转移 entry 所有权）。
  */
-void *genericCacheManagerReplaceOne(GenericCacheManager *gcm);
+void *genericCacheManagerReplaceOne(GenericCacheManager *this);
 
 /**
  * @brief 强制移除缓存项（转移 entry 所有权）。
  */
-void *genericCacheManagerRemove(GenericCacheManager *gcm, uint32_t key);
+void *genericCacheManagerRemove(GenericCacheManager *this, uint32_t key);
 
 
 #endif

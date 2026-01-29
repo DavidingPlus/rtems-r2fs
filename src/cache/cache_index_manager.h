@@ -1,8 +1,6 @@
 #ifndef _CACHE_INDEX_MANAGER_H_
 #define _CACHE_INDEX_MANAGER_H_
 
-#include <stdlib.h>
-
 #include "uthash/uthash.h"
 
 
@@ -58,32 +56,32 @@ typedef struct CacheIndexManager
 /**
  * @brief 初始化缓存索引。
  */
-void cacheIndexManagerInit(CacheIndexManager *cim);
+void cacheIndexManagerInit(CacheIndexManager *this);
 
 /**
  * @brief 销毁缓存索引，释放所有 value 内存。
  */
-void cacheIndexManagerDestroy(CacheIndexManager *cim);
+void cacheIndexManagerDestroy(CacheIndexManager *this);
 
 /**
  * @brief 添加缓存项。
  */
-void cacheIndexManagerAdd(CacheIndexManager *cim, uint32_t key, void *value);
+void cacheIndexManagerAdd(CacheIndexManager *this, uint32_t key, void *value);
 
 /**
  * @brief 获取缓存项。
  */
-void *cacheIndexManagerGet(CacheIndexManager *cim, uint32_t key);
+void *cacheIndexManagerGet(CacheIndexManager *this, uint32_t key);
 
 /**
  * @brief 移除缓存项，返回 value，由调用者决定是否释放。
  */
-void *cacheIndexManagerRemove(CacheIndexManager *cim, uint32_t key);
+void *cacheIndexManagerRemove(CacheIndexManager *this, uint32_t key);
 
 /**
  * @brief 删除指定条目（迭代器风格）。
  */
-void cacheIndexManagerErase(CacheIndexManager *cim, CacheEntry *cacheEntry);
+void cacheIndexManagerErase(CacheIndexManager *this, CacheEntry *cacheEntry);
 
 
 #endif

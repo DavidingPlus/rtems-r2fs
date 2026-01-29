@@ -3,60 +3,60 @@
 #include <assert.h>
 
 
-void genericCacheManagerInit(GenericCacheManager *gcm)
+void genericCacheManagerInit(GenericCacheManager *this)
 {
-    assert(gcm);
+    assert(this);
 
-    cacheIndexManagerInit(&gcm->index);
-    cacheLruReplacerInit(&gcm->replacer);
+    cacheIndexManagerInit(&this->index);
+    cacheLruReplacerInit(&this->replacer);
 }
 
-void genericCacheManagerDestroy(GenericCacheManager *gcm)
+void genericCacheManagerDestroy(GenericCacheManager *this)
 {
-    assert(gcm);
+    assert(this);
 
-    cacheLruReplacerDestroy(&gcm->replacer);
-    cacheIndexManagerDestroy(&gcm->index);
+    cacheLruReplacerDestroy(&this->replacer);
+    cacheIndexManagerDestroy(&this->index);
 }
 
-void genericCacheManagerAdd(GenericCacheManager *gcm, uint32_t key, void *entry)
+void genericCacheManagerAdd(GenericCacheManager *this, uint32_t key, void *entry)
 {
-    assert(gcm);
+    assert(this);
     assert(entry);
 
-    cacheIndexManagerAdd(&gcm->index, key, entry);
-    cacheLruReplacerAdd(&gcm->replacer, key);
+    cacheIndexManagerAdd(&this->index, key, entry);
+    cacheLruReplacerAdd(&this->replacer, key);
 }
 
-void *genericCacheManagerGet(GenericCacheManager *gcm, uint32_t key, bool is_access)
+void *genericCacheManagerGet(GenericCacheManager *this, uint32_t key, bool is_access)
 {
-    assert(gcm);
+    assert(this);
 
-    void *entry = cacheIndexManagerGet(&gcm->index, key);
-    if (entry && is_access) cacheLruReplacerAccess(&gcm->replacer, key);
+    void *entry = cacheIndexManagerGet(&this->index, key);
+    if (entry && is_access) cacheLruReplacerAccess(&this->replacer, key);
 
 
     return entry;
 }
 
-void *genericCacheManagerReplaceOne(GenericCacheManager *gcm)
+void *genericCacheManagerReplaceOne(GenericCacheManager *this)
 {
-    assert(gcm);
+    assert(this);
 
-    if (!cacheLruReplacerCanReplace(&gcm->replacer)) return NULL;
+    if (!cacheLruReplacerCanReplace(&this->replacer)) return NULL;
 
-    uint32_t key = cacheLruReplacerPop(&gcm->replacer);
+    uint32_t key = cacheLruReplacerPop(&this->replacer);
 
 
-    return cacheIndexManagerRemove(&gcm->index, key);
+    return cacheIndexManagerRemove(&this->index, key);
 }
 
-void *genericCacheManagerRemove(GenericCacheManager *gcm, uint32_t key)
+void *genericCacheManagerRemove(GenericCacheManager *this, uint32_t key)
 {
-    assert(gcm);
+    assert(this);
 
-    cacheLruReplacerRemove(&gcm->replacer, key);
+    cacheLruReplacerRemove(&this->replacer, key);
 
 
-    return cacheIndexManagerRemove(&gcm->index, key);
+    return cacheIndexManagerRemove(&this->index, key);
 }

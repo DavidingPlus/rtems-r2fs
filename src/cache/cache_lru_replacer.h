@@ -1,8 +1,6 @@
 #ifndef _CACHE_LRU_REPLACER_H_
 #define _CACHE_LRU_REPLACER_H_
 
-#include <stddef.h>
-
 #include "uthash/uthash.h"
 
 
@@ -42,37 +40,37 @@ typedef struct CacheLruReplacer
 /**
  * @brief 初始化 LRU replacer。
  */
-void cacheLruReplacerInit(CacheLruReplacer *lru);
+void cacheLruReplacerInit(CacheLruReplacer *this);
 
 /**
  * @brief 销毁 LRU replacer（不释放 key）。
  */
-void cacheLruReplacerDestroy(CacheLruReplacer *lru);
+void cacheLruReplacerDestroy(CacheLruReplacer *this);
 
 /**
  * @brief 添加 key（默认视为最近访问）。
  */
-void cacheLruReplacerAdd(CacheLruReplacer *lru, uint32_t key);
+void cacheLruReplacerAdd(CacheLruReplacer *this, uint32_t key);
 
 /**
  * @brief 访问 key（刷新 LRU 顺序）。
  */
-void cacheLruReplacerAccess(CacheLruReplacer *lru, uint32_t key);
+void cacheLruReplacerAccess(CacheLruReplacer *this, uint32_t key);
 
 /**
  * @brief 是否存在可被置换的 key。
  */
-int cacheLruReplacerCanReplace(CacheLruReplacer *lru);
+int cacheLruReplacerCanReplace(CacheLruReplacer *this);
 
 /**
  * @brief 弹出一个最久未访问的 key。
  */
-uint32_t cacheLruReplacerPop(CacheLruReplacer *lru);
+uint32_t cacheLruReplacerPop(CacheLruReplacer *this);
 
 /**
  * @brief 手动移除指定 key。
  */
-void cacheLruReplacerRemove(CacheLruReplacer *lru, uint32_t key);
+void cacheLruReplacerRemove(CacheLruReplacer *this, uint32_t key);
 
 
 #endif
