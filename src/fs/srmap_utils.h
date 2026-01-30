@@ -36,8 +36,8 @@ typedef struct
     struct file_system_manager *fsManager;
     uint32_t srmapStartLpa;
 
-    struct SrmapCacheEntry *srmapCache;
-    struct DirtyBlkEntry *dirtyBlks;
+    SrmapCacheEntry *srmapCache;
+    DirtyBlkEntry *dirtyBlks;
 } SrmapUtils;
 
 

@@ -4,33 +4,9 @@
 #include <assert.h>
 
 
-static void detachNode(CacheLruReplacer *this, LruNode *node)
-{
-    if (node->prev)
-        node->prev->next = node->next;
-    else
-        this->head = node->next;
+static void detachNode(CacheLruReplacer *this, LruNode *node);
 
-    if (node->next)
-        node->next->prev = node->prev;
-    else
-        this->tail = node->prev;
-
-    node->prev = node->next = NULL;
-}
-
-static void attachTail(CacheLruReplacer *this, LruNode *node)
-{
-    node->prev = this->tail;
-    node->next = NULL;
-
-    if (this->tail)
-        this->tail->next = node;
-    else
-        this->head = node;
-
-    this->tail = node;
-}
+static void attachTail(CacheLruReplacer *this, LruNode *node);
 
 
 void cacheLruReplacerInit(CacheLruReplacer *this)
@@ -147,4 +123,33 @@ void cacheLruReplacerRemove(CacheLruReplacer *this, uint32_t key)
     free(entry);
 
     --this->size;
+}
+
+
+void detachNode(CacheLruReplacer *this, LruNode *node)
+{
+    if (node->prev)
+        node->prev->next = node->next;
+    else
+        this->head = node->next;
+
+    if (node->next)
+        node->next->prev = node->prev;
+    else
+        this->tail = node->prev;
+
+    node->prev = node->next = NULL;
+}
+
+void attachTail(CacheLruReplacer *this, LruNode *node)
+{
+    node->prev = this->tail;
+    node->next = NULL;
+
+    if (this->tail)
+        this->tail->next = node;
+    else
+        this->head = node;
+
+    this->tail = node;
 }

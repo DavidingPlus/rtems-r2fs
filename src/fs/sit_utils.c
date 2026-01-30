@@ -8,7 +8,9 @@
 #include <stdbool.h>
 
 
-// 私有函数：修改 LPA 状态。
+/**
+ * @brief 修改 LPA 状态。
+ */
 static void sitChangeLpaState(SitOperator *this, uint32_t lpa, int valid);
 
 
@@ -62,7 +64,7 @@ uint32_t sitGetFirstLpaOfSegId(SitOperator *this, uint32_t segId)
 }
 
 
-static void sitChangeLpaState(SitOperator *this, uint32_t lpa, int valid)
+void sitChangeLpaState(SitOperator *this, uint32_t lpa, int valid)
 {
     if (INVALID_LPA == lpa) return;
 
