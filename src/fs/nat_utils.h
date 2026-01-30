@@ -4,6 +4,9 @@
 #include "utils/types.h"
 
 
+struct file_system_manager;
+
+
 /**
  * @brief NID 在 NAT 中的位置。
  */

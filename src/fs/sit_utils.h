@@ -4,6 +4,9 @@
 #include "utils/types.h"
 
 
+struct file_system_manager;
+
+
 /**
  * @brief LPA 在 segment 中的位置。记录一个逻辑页在 segment 中的 segment ID 和 segment 内偏移。
  */
