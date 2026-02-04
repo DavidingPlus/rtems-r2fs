@@ -1,4 +1,4 @@
-# R2FS Makefile
+# RTFS Makefile
 # 
 # 使用方法：
 #   make configure  - 配置项目，默认不带 unit test
@@ -25,7 +25,7 @@ all: build
 
 # 配置项目，默认不带 unit test
 configure:
-	@echo "Configuring R2FS FileSystem..."
+	@echo "Configuring RTFS FileSystem..."
 	@echo "Unit Test Disabled"; \
 	./waf configure \
 		--rtems=$(RTEMS_ROOT) \
@@ -33,7 +33,7 @@ configure:
 
 # 配置项目并启动 unit test
 configure-with-unit-test:
-	@echo "Configuring R2FS FileSystem..."
+	@echo "Configuring RTFS FileSystem..."
 	@echo "Unit Test Enabled"; \
 	./waf configure \
 		--rtems=$(RTEMS_ROOT) \
@@ -42,12 +42,12 @@ configure-with-unit-test:
 
 # 构建项目
 build:
-	@echo "Building R2FS FileSystem..."
+	@echo "Building RTFS FileSystem..."
 	./waf
 
 # 运行项目
 run: build
-	@echo "Running R2FS FileSystem..."
+	@echo "Running RTFS FileSystem..."
 	@export QEMU_AUDIO_DRV="none" && \
 	$(QEMU) $(QEMU_OPTS) -kernel $(QEMU_KERNEL)
 

@@ -3,7 +3,7 @@
 
 #include "uthash/uthash.h"
 
-#include "r2fs_test.h"
+#include "rtfs_test.h"
 
 
 typedef struct example_user_t
@@ -14,7 +14,7 @@ typedef struct example_user_t
 } example_user_t;
 
 
-R2FS_TEST(UthashTest)
+RTFS_TEST(UthashTest)
 {
     int i;
     example_user_t *user, *users = NULL;

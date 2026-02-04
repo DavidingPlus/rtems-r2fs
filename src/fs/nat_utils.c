@@ -1,7 +1,7 @@
 #include "nat_utils.h"
 
 #include "fs/fs.h"
-#include "utils/r2fs_log.h"
+#include "utils/rtfs_log.h"
 
 #include <assert.h>
 #include <stddef.h>
@@ -34,7 +34,7 @@ uint32_t natGetLpaOfNid(NatLpaMapping *this, uint32_t nid)
 {
     NatNidPos pos = natGetNidPos(this, nid);
 
-    struct R2fsNatEntry *natEntries = NULL;
+    struct RtfsNatEntry *natEntries = NULL;
 
     // TODO 依赖 fs_manager 获取 nat cache 的接口和 SIT_NAT_cache_entry_handle 获取 entries 的接口。
     // SIT_NAT_cache_entry_handle natHandle = natCacheGet(this->fsManager, pos.lpa);
@@ -44,8 +44,8 @@ uint32_t natGetLpaOfNid(NatLpaMapping *this, uint32_t nid)
 
     uint32_t nidLpa = natEntries[pos.idx].block_addr;
 
-    R2FS_LOG(R2FS_LOG_INFO, "nat entry pos of nid %u: lpa=%u, idx=%u", nid, pos.lpa, pos.idx);
-    R2FS_LOG(R2FS_LOG_INFO, "lpa of nid %u: %u", nid, nidLpa);
+    RTFS_LOG(RTFS_LOG_INFO, "nat entry pos of nid %u: lpa=%u, idx=%u", nid, pos.lpa, pos.idx);
+    RTFS_LOG(RTFS_LOG_INFO, "lpa of nid %u: %u", nid, nidLpa);
 
     return nidLpa;
 }
@@ -54,7 +54,7 @@ void natSetLpaOfNid(NatLpaMapping *this, uint32_t nid, uint32_t newLpa)
 {
     NatNidPos pos = natGetNidPos(this, nid);
 
-    struct R2fsNatEntry *natEntries = NULL;
+    struct RtfsNatEntry *natEntries = NULL;
 
     // TODO 同理依赖相关接口。
     // SIT_NAT_cache_entry_handle natHandle = natCacheGet(this->fsManager, pos.lpa);
@@ -64,7 +64,7 @@ void natSetLpaOfNid(NatLpaMapping *this, uint32_t nid, uint32_t newLpa)
 
     natEntries[pos.idx].block_addr = newLpa;
 
-    R2FS_LOG(R2FS_LOG_DEBUG, "set nid(%u)'s lpa to %u.", nid, newLpa);
+    RTFS_LOG(RTFS_LOG_DEBUG, "set nid(%u)'s lpa to %u.", nid, newLpa);
 
     // TODO 记录 NAT 日志，依赖日志接口。
     // journal_container *curJournal = fsManagerGetCurJournal(this->fsManager);

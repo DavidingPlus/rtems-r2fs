@@ -1,7 +1,7 @@
 #include "srmap_utils.h"
 
 #include "fs/fs.h"
-#include "utils/r2fs_log.h"
+#include "utils/rtfs_log.h"
 
 
 typedef struct
@@ -40,12 +40,12 @@ void srmapUtilsWriteSrmapOfData(SrmapUtils *this, uint32_t dataLpa, uint32_t ino
 {
     SrmapPos pos = srmapUtilsGetSrmapPosOfLpa(this, dataLpa);
     BlockBuffer *blk = srmapUtilsGetSrmapBlk(this, pos.srmapBlkLpa);
-    struct R2fsSummaryBlock *srmapBlk = (struct R2fsSummaryBlock *)blockBufferGetPtr(blk);
+    struct RtfsSummaryBlock *srmapBlk = (struct RtfsSummaryBlock *)blockBufferGetPtr(blk);
 
     srmapBlk->entries[pos.idx].nid = ino;
     srmapBlk->entries[pos.idx].ofs_in_node = blkoff;
 
-    R2FS_LOG(R2FS_LOG_INFO, "set srmap of data lpa %u: ino=%u, blkoff=%u", dataLpa, ino, blkoff);
+    RTFS_LOG(RTFS_LOG_INFO, "set srmap of data lpa %u: ino=%u, blkoff=%u", dataLpa, ino, blkoff);
 
     DirtyBlkEntry *dentry = NULL;
     HASH_FIND(hh, this->dirtyBlks, &pos.srmapBlkLpa, sizeof(uint32_t), dentry);
@@ -61,11 +61,11 @@ void srmapUtilsWriteSrmapOfNode(SrmapUtils *this, uint32_t nodeLpa, uint32_t nid
 {
     SrmapPos pos = srmapUtilsGetSrmapPosOfLpa(this, nodeLpa);
     BlockBuffer *blk = srmapUtilsGetSrmapBlk(this, pos.srmapBlkLpa);
-    struct R2fsSummaryBlock *srmapBlk = (struct R2fsSummaryBlock *)blockBufferGetPtr(blk);
+    struct RtfsSummaryBlock *srmapBlk = (struct RtfsSummaryBlock *)blockBufferGetPtr(blk);
 
     srmapBlk->entries[pos.idx].nid = nid;
 
-    R2FS_LOG(R2FS_LOG_INFO, "set srmap of node lpa %u: nid=%u", nodeLpa, nid);
+    RTFS_LOG(RTFS_LOG_INFO, "set srmap of node lpa %u: nid=%u", nodeLpa, nid);
 
     DirtyBlkEntry *dentry = NULL;
     HASH_FIND(hh, this->dirtyBlks, &pos.srmapBlkLpa, sizeof(uint32_t), dentry);
@@ -107,7 +107,7 @@ SrmapPos srmapUtilsGetSrmapPosOfLpa(SrmapUtils *this, uint32_t lpa)
     pos.srmapBlkLpa = this->srmapStartLpa + (lpa / ENTRIES_IN_SUM);
     pos.idx = lpa % ENTRIES_IN_SUM;
 
-    R2FS_LOG(R2FS_LOG_DEBUG, "srmap pos of lpa %u: srmapBlkLpa=%u, idx=%u", lpa, pos.srmapBlkLpa, pos.idx);
+    RTFS_LOG(RTFS_LOG_DEBUG, "srmap pos of lpa %u: srmapBlkLpa=%u, idx=%u", lpa, pos.srmapBlkLpa, pos.idx);
 
 
     return pos;

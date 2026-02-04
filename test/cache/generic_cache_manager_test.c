@@ -1,4 +1,4 @@
-#include "r2fs_test.h"
+#include "rtfs_test.h"
 
 #include "cache/generic_cache_manager.h"
 
@@ -18,7 +18,7 @@ static GcmTestEntry *newTestEntry(int v)
 }
 
 
-R2FS_TEST(GCMInitTest)
+RTFS_TEST(GCMInitTest)
 {
     GenericCacheManager gcm;
 
@@ -32,7 +32,7 @@ R2FS_TEST(GCMInitTest)
     genericCacheManagerDestroy(&gcm);
 }
 
-R2FS_TEST(GCMAddGetTest)
+RTFS_TEST(GCMAddGetTest)
 {
     GenericCacheManager gcm;
     uint32_t k1 = 1;
@@ -51,7 +51,7 @@ R2FS_TEST(GCMAddGetTest)
     genericCacheManagerDestroy(&gcm);
 }
 
-R2FS_TEST(GCMReplaceOrderTest1)
+RTFS_TEST(GCMReplaceOrderTest1)
 {
     GenericCacheManager gcm;
     uint32_t k1 = 1, k2 = 2, k3 = 3;
@@ -81,7 +81,7 @@ R2FS_TEST(GCMReplaceOrderTest1)
     genericCacheManagerDestroy(&gcm);
 }
 
-R2FS_TEST(GCMAccessRefreshTest)
+RTFS_TEST(GCMAccessRefreshTest)
 {
     GenericCacheManager gcm;
     uint32_t k1 = 1, k2 = 2, k3 = 3;
@@ -114,7 +114,7 @@ R2FS_TEST(GCMAccessRefreshTest)
     genericCacheManagerDestroy(&gcm);
 }
 
-R2FS_TEST(GCMNoAccessRefreshTest)
+RTFS_TEST(GCMNoAccessRefreshTest)
 {
     GenericCacheManager gcm;
     uint32_t k1 = 1, k2 = 2, k3 = 3;
@@ -147,7 +147,7 @@ R2FS_TEST(GCMNoAccessRefreshTest)
     genericCacheManagerDestroy(&gcm);
 }
 
-R2FS_TEST(GCMRemoveTest)
+RTFS_TEST(GCMRemoveTest)
 {
     GenericCacheManager gcm;
     uint32_t k1 = 1, k2 = 2, k3 = 3;

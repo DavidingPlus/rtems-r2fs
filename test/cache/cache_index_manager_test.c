@@ -1,4 +1,4 @@
-#include "r2fs_test.h"
+#include "rtfs_test.h"
 
 #include "cache/cache_index_manager.h"
 
@@ -10,7 +10,7 @@ typedef struct
 } CimTestEntry;
 
 
-R2FS_TEST(CIMInitTest)
+RTFS_TEST(CIMInitTest)
 {
     CacheIndexManager cim;
 
@@ -19,7 +19,7 @@ R2FS_TEST(CIMInitTest)
     cacheIndexManagerDestroy(&cim);
 }
 
-R2FS_TEST(CIMAddGetTest)
+RTFS_TEST(CIMAddGetTest)
 {
     CacheIndexManager cim;
 
@@ -46,7 +46,7 @@ R2FS_TEST(CIMAddGetTest)
     cacheIndexManagerDestroy(&cim);
 }
 
-R2FS_TEST(CIMRemoveTest)
+RTFS_TEST(CIMRemoveTest)
 {
     CacheIndexManager cim;
 
@@ -71,7 +71,7 @@ R2FS_TEST(CIMRemoveTest)
     cacheIndexManagerDestroy(&cim);
 }
 
-R2FS_TEST(CIMAddDupKeyTest)
+RTFS_TEST(CIMAddDupKeyTest)
 {
     CacheIndexManager cim;
 

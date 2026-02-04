@@ -1,7 +1,7 @@
 #include "sit_utils.h"
 
 #include "fs/fs.h"
-#include "utils/r2fs_log.h"
+#include "utils/rtfs_log.h"
 
 #include <assert.h>
 #include <stddef.h>
@@ -76,17 +76,17 @@ void sitChangeLpaState(SitOperator *this, uint32_t lpa, int valid)
     // SIT block LPA
     uint32_t sitLpa = this->sitStartLpa + segId / SIT_ENTRY_PER_BLOCK;
 
-    R2FS_LOG(R2FS_LOG_INFO, "lpa [%u]: segId = %u, segoff = %u, SIT lpa = %u", lpa, segId, segoff, sitLpa);
+    RTFS_LOG(RTFS_LOG_INFO, "lpa [%u]: segId = %u, segoff = %u, SIT lpa = %u", lpa, segId, segoff, sitLpa);
 
     // TODO 依赖 fs_manager 获取 sit cache 的接口和 SIT_NAT_cache_entry_handle 获取 entries 的接口。
     // 获取 SIT block
     // SIT_NAT_cache *sitCache = fsManagerGetSitCache(this->fsManager);
     // SIT_NAT_cache_entry_handle sitBlockHandle = sitCacheGet(sitCache, sitLpa);
-    // R2fsSitBlock *sitBlock = sitHandleGetSitBlockPtr(sitBlockHandle);
+    // RtfsSitBlock *sitBlock = sitHandleGetSitBlockPtr(sitBlockHandle);
 
     // 找到对应 SIT entry
-    struct R2fsSitEntry *sitEntry = NULL;
-    // R2fsSitEntry *sitEntry = &sitBlock->entries[segId % SIT_ENTRY_PER_BLOCK];
+    struct RtfsSitEntry *sitEntry = NULL;
+    // RtfsSitEntry *sitEntry = &sitBlock->entries[segId % SIT_ENTRY_PER_BLOCK];
 
     uint32_t bitmapIdx = segoff / 8;
     uint32_t bitmapOff = segoff % 8;
@@ -99,7 +99,7 @@ void sitChangeLpaState(SitOperator *this, uint32_t lpa, int valid)
         if (GET_SIT_VBLOCKS(sitEntry) < 511)
             sitEntry->vblocks++;
 
-        R2FS_LOG(R2FS_LOG_INFO, "validate lpa [%u] in SIT.", lpa);
+        RTFS_LOG(RTFS_LOG_INFO, "validate lpa [%u] in SIT.", lpa);
     }
     else
     {
@@ -109,7 +109,7 @@ void sitChangeLpaState(SitOperator *this, uint32_t lpa, int valid)
         if (GET_SIT_VBLOCKS(sitEntry) > 0)
             sitEntry->vblocks--;
 
-        R2FS_LOG(R2FS_LOG_INFO, "invalidate lpa [%u] in SIT.", lpa);
+        RTFS_LOG(RTFS_LOG_INFO, "invalidate lpa [%u] in SIT.", lpa);
     }
 
     // TODO 写 SIT 日志，依赖日志接口。

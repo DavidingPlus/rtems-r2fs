@@ -5,7 +5,7 @@
 #include "utils/types.h"
 
 
-struct R2fsSuperBlock
+struct RtfsSuperBlock
 {
     /*stable read only field*/
     __le32 magic;                      /* Magic Number */
@@ -49,14 +49,14 @@ struct R2fsSuperBlock
 };
 
 
-#define R2FS_MAGIC_NUMBER 0x336699cc
+#define RTFS_MAGIC_NUMBER 0x336699cc
 
 #define BLOCK_PER_SEGMENT 512
 
 #define INVALID_LPA 0
 #define INVALID_SEGID 0 // 将超级块segment id用作无效的node/data/free segid
 
-#define R2FS_NAME_LEN 255
+#define RTFS_NAME_LEN 255
 #define DEF_ADDRS_PER_INODE 932 /* Address Pointers in an Inode */
 #define CUR_ADDRS_PER_INODE(inode) DEF_ADDRS_PER_INODE
 #define DEF_NIDS_PER_INODE 5 /* Node IDs in an Inode */
@@ -77,14 +77,14 @@ struct R2fsSuperBlock
 #define MAX_FILE_MAPPING_LEVEL 4
 #define INVALID_NID 0
 
-#define R2FS_INLINE_DATA 0x02   /* file inline data flag */
-#define R2FS_INLINE_DENTRY 0x04 /* file inline dentry flag */
-#define R2FS_DATA_EXIST 0x08    /* file inline data exist flag */
-#define R2FS_INLINE_DOTS 0x10   /* file having implicit dot dentries */
+#define RTFS_INLINE_DATA 0x02   /* file inline data flag */
+#define RTFS_INLINE_DENTRY 0x04 /* file inline dentry flag */
+#define RTFS_DATA_EXIST 0x08    /* file inline data exist flag */
+#define RTFS_INLINE_DOTS 0x10   /* file having implicit dot dentries */
 
 #define MAX_INLINE_DATA (sizeof(__le32) * (DEF_ADDRS_PER_INODE))
 
-struct R2fsInode
+struct RtfsInode
 {
     __le16 i_mode; /* file mode，暂不使用 */
     __u8 i_inline; /* file inline flags */
@@ -107,7 +107,7 @@ struct R2fsInode
     __le32 i_current_depth;
     __le32 i_pino;              /* parent inode number */
     __le32 i_namelen;           /* file name length */
-    __u8 i_name[R2FS_NAME_LEN]; /* file name for SPOR */
+    __u8 i_name[RTFS_NAME_LEN]; /* file name for SPOR */
     __u8 i_dir_level;           /* dentry_level for large dir(used，始终置为0) */
 
 
@@ -136,29 +136,29 @@ struct NodeFooter
     __le32 next_blkaddr; /* next node page block address(不使用) */
 };
 
-struct R2fsNode
+struct RtfsNode
 {
     /* can be one of three types: inode, direct, and indirect types */
     union
     {
-        struct R2fsInode i;
+        struct RtfsInode i;
         struct DirectNode dn;
         struct IndirectNode in;
     };
     struct NodeFooter footer;
 };
 
-struct R2fsNatEntry
+struct RtfsNatEntry
 {
     __le32 ino; /* inode number */ // 若nid = ino，则该node为inode
     __le32 block_addr;             /* block address */
 } __attribute__((packed));
 
-#define NAT_ENTRY_PER_BLOCK (4096 / sizeof(struct R2fsNatEntry))
+#define NAT_ENTRY_PER_BLOCK (4096 / sizeof(struct RtfsNatEntry))
 
-struct R2fsNatBlock
+struct RtfsNatBlock
 {
-    struct R2fsNatEntry entries[NAT_ENTRY_PER_BLOCK];
+    struct RtfsNatEntry entries[NAT_ENTRY_PER_BLOCK];
 } __attribute__((packed));
 
 /*
@@ -173,13 +173,13 @@ struct R2fsNatBlock
 #define SEG_BLK_OFF_MASK ((1ul << 9) - 1)
 
 /*
- * R2FS uses 4 bytes to represent block address. As a result, supported size of
+ * RTFS uses 4 bytes to represent block address. As a result, supported size of
  * disk is 16 TB and it equals to 16 * 1024 * 1024 / 2 segments.
  */
-#define R2FS_MAX_SEGMENT ((16 * 1024 * 1024) / 2)
+#define RTFS_MAX_SEGMENT ((16 * 1024 * 1024) / 2)
 
 /*
- * Note that R2fsSitEntry->vblocks has the following bit-field information.
+ * Note that RtfsSitEntry->vblocks has the following bit-field information.
  * [31:9] : next segment id
  * [8:0] : valid block count
  */
@@ -195,17 +195,17 @@ struct R2fsNatBlock
         ((raw_sit)->vblocks) |= ((next_seg) << SIT_VBLOCKS_SHIFT); \
     } while (0)
 
-struct R2fsSitEntry
+struct RtfsSitEntry
 {
     __le32 vblocks;                      /* reference above */
     __u8 valid_map[SIT_VBLOCK_MAP_SIZE]; /* bitmap for valid blocks */
 } __attribute__((packed));
 
-#define SIT_ENTRY_PER_BLOCK (4096 / sizeof(struct R2fsSitEntry))
+#define SIT_ENTRY_PER_BLOCK (4096 / sizeof(struct RtfsSitEntry))
 
-struct R2fsSitBlock
+struct RtfsSitBlock
 {
-    struct R2fsSitEntry entries[SIT_ENTRY_PER_BLOCK];
+    struct RtfsSitEntry entries[SIT_ENTRY_PER_BLOCK];
 } __attribute__((packed));
 
 /*
@@ -235,33 +235,33 @@ struct R2fsSitBlock
  * 这么做的原因：node block的淘汰保护，要求非叶节点必须在缓存中，
  * 因此不能只记录直接索引的node block，这样在垃圾回收修改node block时无法满足前述要求，会出现叶节点在缓存而非叶节点不在的情况。
  */
-struct R2fsSummary
+struct RtfsSummary
 {
     __le32 nid;         /* parent node id */
     __le32 ofs_in_node; /* block index in parent node */
 } __attribute__((packed));
 
 /* 4KB-sized summary block structure */
-struct R2fsSummaryBlock
+struct RtfsSummaryBlock
 {
-    struct R2fsSummary entries[ENTRIES_IN_SUM];
+    struct RtfsSummary entries[ENTRIES_IN_SUM];
 } __attribute__((packed));
 
 /*
  * For directory operations
  */
-#define R2FS_DOT_HASH 0
-#define R2FS_DDOT_HASH R2FS_DOT_HASH
-#define R2FS_MAX_HASH (~((0x3ULL) << 62))
-#define R2FS_HASH_COL_BIT ((0x1ULL) << 63)
+#define RTFS_DOT_HASH 0
+#define RTFS_DDOT_HASH RTFS_DOT_HASH
+#define RTFS_MAX_HASH (~((0x3ULL) << 62))
+#define RTFS_HASH_COL_BIT ((0x1ULL) << 63)
 
-typedef __le32 r2fs_hash_t;
+typedef __le32 rtfs_hash_t;
 
 /* One directory entry slot covers 8bytes-long file name */
-#define R2FS_SLOT_LEN 8
-#define R2FS_SLOT_LEN_BITS 3
+#define RTFS_SLOT_LEN 8
+#define RTFS_SLOT_LEN_BITS 3
 
-#define GET_DENTRY_SLOTS(x) (((x) + R2FS_SLOT_LEN - 1) >> R2FS_SLOT_LEN_BITS)
+#define GET_DENTRY_SLOTS(x) (((x) + RTFS_SLOT_LEN - 1) >> RTFS_SLOT_LEN_BITS)
 
 /* MAX level for dir lookup */
 #define MAX_DIR_HASH_DEPTH 63
@@ -286,15 +286,15 @@ typedef __le32 r2fs_hash_t;
 #define SIZE_OF_DENTRY_BITMAP ((NR_DENTRY_IN_BLOCK + 7) / \
                                8)
 #define SIZE_OF_RESERVED (4096 - ((SIZE_OF_DIR_ENTRY +     \
-                                   R2FS_SLOT_LEN) *        \
+                                   RTFS_SLOT_LEN) *        \
                                       NR_DENTRY_IN_BLOCK + \
                                   SIZE_OF_DENTRY_BITMAP))
 #define MIN_INLINE_DENTRY_SIZE 40 /* just include '.' and '..' entries */
 
 #define INVALID_DENTRY_BITPOS (NR_DENTRY_IN_BLOCK + 1)
 
-/* One directory entry slot representing R2FS_SLOT_LEN-sized file name */
-struct R2fsDirEntry
+/* One directory entry slot representing RTFS_SLOT_LEN-sized file name */
+struct RtfsDirEntry
 {
     __le32 hash_code; /* hash code of file name */
     __le32 ino;       /* inode number */
@@ -303,49 +303,49 @@ struct R2fsDirEntry
 } __attribute__((packed));
 
 /* 4KB-sized directory entry block */
-struct R2fsDentryBlock
+struct RtfsDentryBlock
 {
     /* validity bitmap for directory entries in each block */
     __u8 dentry_bitmap[SIZE_OF_DENTRY_BITMAP];
     __u8 reserved[SIZE_OF_RESERVED];
-    struct R2fsDirEntry dentry[NR_DENTRY_IN_BLOCK];
-    __u8 filename[NR_DENTRY_IN_BLOCK][R2FS_SLOT_LEN];
+    struct RtfsDirEntry dentry[NR_DENTRY_IN_BLOCK];
+    __u8 filename[NR_DENTRY_IN_BLOCK][RTFS_SLOT_LEN];
 } __attribute__((packed));
 
 /* for inline dir */
 #define NR_INLINE_DENTRY (MAX_INLINE_DATA * 8 /                  \
-                          ((SIZE_OF_DIR_ENTRY + R2FS_SLOT_LEN) * \
+                          ((SIZE_OF_DIR_ENTRY + RTFS_SLOT_LEN) * \
                                8 +                               \
                            1))
 #define INLINE_DENTRY_BITMAP_SIZE ((NR_INLINE_DENTRY + \
                                     8 - 1) /           \
                                    8)
 #define INLINE_RESERVED_SIZE (MAX_INLINE_DATA -                      \
-                              ((SIZE_OF_DIR_ENTRY + R2FS_SLOT_LEN) * \
+                              ((SIZE_OF_DIR_ENTRY + RTFS_SLOT_LEN) * \
                                    NR_INLINE_DENTRY +                \
                                INLINE_DENTRY_BITMAP_SIZE))
 
 /* inline directory entry structure */
-struct R2fsInlineDentry
+struct RtfsInlineDentry
 {
     __u8 dentry_bitmap[INLINE_DENTRY_BITMAP_SIZE];
     __u8 reserved[INLINE_RESERVED_SIZE];
-    struct R2fsDirEntry dentry[NR_INLINE_DENTRY];
-    __u8 filename[NR_INLINE_DENTRY][R2FS_SLOT_LEN];
+    struct RtfsDirEntry dentry[NR_INLINE_DENTRY];
+    __u8 filename[NR_INLINE_DENTRY][RTFS_SLOT_LEN];
 } __attribute__((packed));
 
 /* file types used in inode_info->flags */
 enum
 {
-    R2FS_FT_UNKNOWN,
-    R2FS_FT_REG_FILE,
-    R2FS_FT_DIR,
-    R2FS_FT_CHRDEV,
-    R2FS_FT_BLKDEV,
-    R2FS_FT_FIFO,
-    R2FS_FT_SOCK,
-    R2FS_FT_SYMLINK,
-    R2FS_FT_MAX
+    RTFS_FT_UNKNOWN,
+    RTFS_FT_REG_FILE,
+    RTFS_FT_DIR,
+    RTFS_FT_CHRDEV,
+    RTFS_FT_BLKDEV,
+    RTFS_FT_FIFO,
+    RTFS_FT_SOCK,
+    RTFS_FT_SYMLINK,
+    RTFS_FT_MAX
 };
 
 
